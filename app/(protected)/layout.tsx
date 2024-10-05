@@ -22,7 +22,9 @@ export default async function DashboardLayout({
         <LogoutProvider>
           <DeleteProvider>
             <CheatListProvider>
-              <TopNav />
+              <div className="bg-[#536976]">
+                <TopNav />
+              </div>
               <div>{children}</div>
               <KeyboardShortcuts />
               {/* <VersionNumber /> */}

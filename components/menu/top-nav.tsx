@@ -18,7 +18,7 @@ export function TopNav({ className }: React.HTMLAttributes<HTMLDivElement>) {
         className,
       )}
     >
-      <div className="flex gap-5 items-center">
+      <div className="flex gap-5 items-center ">
         <SideNav />
         <h1 className="text-xl font-bold">
           <Image

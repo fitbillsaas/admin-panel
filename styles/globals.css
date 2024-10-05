@@ -75,11 +75,11 @@
     @apply !border !rounded-md;
   }
 
-  .listing-table>thead {
+  .listing-table > thead {
     @apply !bg-secondary;
   }
 
-  .listing-table>thead>tr>th {
+  .listing-table > thead > tr > th {
     @apply !text-primary !font-bold;
   }
 }

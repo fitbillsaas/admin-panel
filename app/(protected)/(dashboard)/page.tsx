@@ -274,7 +274,7 @@ export default async function Dashboard() {
         </div>
       </section> */}
 
-      <ScrollArea className="h-full">
+      <ScrollArea className="h-full ">
         <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
           <div className="flex items-center justify-between space-y-2">
             <h2 className="text-3xl font-bold tracking-tight ml-14">
@@ -289,7 +289,7 @@ export default async function Dashboard() {
               {cardData?.map((card: any, index: any) => (
                 <Card
                   key={`dashboard_card_${index}`}
-                  className=" m-4 rounded-xl border  text-card-foreground shadow-lg animate-in fade-in transition-transform transform duration-300 ease-in-out hover:scale-105"
+                  className=" m-4 rounded-xl border  text-card-foreground shadow-lg animate-in fade-in transition-transform transform duration-300 ease-in-out hover:scale-105 bg-white text-black"
                 >
                   <Link href={card?.link}>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

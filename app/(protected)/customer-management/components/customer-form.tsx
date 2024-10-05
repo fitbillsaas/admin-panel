@@ -29,7 +29,7 @@ import { useRouter } from "next/navigation";
 import { useContext, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import StateSelection from "../../dispenser-management/components/sate-provider";
+// import StateSelection from "../../dispenser-management/components/sate-provider";
 const formSchema = z.object({
   first_name: z
     .string()
@@ -139,7 +139,7 @@ const formSchema = z.object({
 
 export default function CustomerForm({
   customer,
-  states,
+  // states,
 }: {
   customer?: User;
   states: State[];
@@ -169,15 +169,15 @@ export default function CustomerForm({
       form.clearErrors(["city", "address", "state", "zip_code"]);
     }
   };
-  const handleStateChange = async (locationData: any) => {
-    console.log("🚀 ~ handleStateChange ~ locationData:", locationData);
-    form.setValue("state", locationData?.code);
-    const validationResults = await Promise.all([]);
-    const hasErrors = validationResults.some((result) => !!result);
-    if (!hasErrors) {
-      form.clearErrors(["state"]);
-    }
-  };
+  // const handleStateChange = async (locationData: any) => {
+  //   console.log("🚀 ~ handleStateChange ~ locationData:", locationData);
+  //   form.setValue("state", locationData?.code);
+  //   const validationResults = await Promise.all([]);
+  //   const hasErrors = validationResults.some((result) => !!result);
+  //   if (!hasErrors) {
+  //     form.clearErrors(["state"]);
+  //   }
+  // };
   const uploaderRef = useRef<UploaderRef>();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -470,14 +470,20 @@ export default function CustomerForm({
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
-                          <StateSelection
+                          <Input
+                            placeholder="Zip code"
+                            type="text"
+                            {...field}
+                            maxLength={5}
+                          />
+                          {/* <StateSelection
                             states={states}
                             onStateChange={(selectedState) => {
                               field.onChange(selectedState.code);
                               handleStateChange(selectedState);
                             }}
                             initialState={field.value}
-                          />
+                          /> */}
                         </FormControl>
                         <FormMessage />
                       </FormItem>

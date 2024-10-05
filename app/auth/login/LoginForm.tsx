@@ -19,7 +19,6 @@ import {
   EyeClosedIcon,
   EyeOpenIcon,
 } from "@radix-ui/react-icons";
-import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { HTMLAttributes, useState } from "react";
@@ -63,15 +62,37 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoginError(undefined);
     setLoginSuccess(false);
-    const res = await signIn("credentials", {
-      ...values,
-      redirect: false,
-    });
 
-    if (res?.error && res?.status == 401) {
-      setLoginError({ message: "Invalid Credentials!" });
-      return false;
-    }
+    console.log(values, "sj");
+
+    // const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
+    const email = values?.username;
+    const password = values?.password;
+
+    const response = await fetch(
+      "https://fitbilsass.onrender.com/users/login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      },
+    );
+
+    console.log(response, "ssddj");
+
+    return;
+
+    // const res = await signIn("credentials", {
+    //   ...values,
+    //   redirect: false,
+    // });
+
+    // if (res?.error && res?.status == 401) {
+    //   setLoginError({ message: "Invalid Credentials!" });
+    //   return false;
+    // }
     setLoginSuccess(true);
     setTimeout(() => {
       router.replace(searchParams.get("callbackUrl") ?? "/");
