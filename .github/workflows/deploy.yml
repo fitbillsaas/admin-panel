@@ -1,0 +1,32 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ staging ]
+  pull_request:
+    branches: [ staging ]
+  
+jobs:
+  Deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v2 
+      - name: Build & Deploy
+        env:
+            PRIVATE_KEY: ${{ secrets.LIVE_PRIVATEKEY}}
+            HOSTNAME: ${{secrets.LIVE_HOSTNAME}}
+            USER_NAME: ${{secrets.LIVE_USERNAME}}
+      
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+
+              # Now we have got the access of EC2 and we will start the deploy .
+              cd /var/www/html/opus-admin-web-app &&
+              git checkout staging &&         
+              git pull origin staging &&
+              npm i &&
+              npm run build && pm2 restart 0
+              '
