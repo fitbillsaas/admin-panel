@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+
 "use client";
 
 import { Spinner } from "@/components/icon";
@@ -59,46 +61,57 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
     },
   });
 
+  const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
+
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoginError(undefined);
     setLoginSuccess(false);
-
-    console.log(values, "sj");
-
-    // const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
-    const email = values?.username;
-    const password = values?.password;
-
-    const response = await fetch(
-      "https://fitbilsass.onrender.com/users/login",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
+  
+    console.log(values, "Submitted values");
+  
+    const email = values.username;
+    const password = values.password;
+  
+    // Make API call to log in
+    const response = await fetch(`${API_ENDPOINT}/users/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify({ email, password }),
+    });
+  
+    const responseData = await response.json();
 
-    console.log(response, "ssddj");
+    console.log("Response Data",responseData);
+  
+    if (!response.ok) {
+      setLoginError({ message: responseData.message || "Invalid Credentials!" });
+      return;
+    }
+  
+    const { user, access } = responseData.data;
 
-    return;
-
-    // const res = await signIn("credentials", {
-    //   ...values,
-    //   redirect: false,
-    // });
-
-    // if (res?.error && res?.status == 401) {
-    //   setLoginError({ message: "Invalid Credentials!" });
-    //   return false;
-    // }
     setLoginSuccess(true);
+    sessionStorage.setItem("accessToken", access["x-access-token"]);
+    sessionStorage.setItem("refreshToken", access["refresh-token"]);
+    sessionStorage.setItem("tokenExpiry", access.token_expiry);
+    sessionStorage.setItem("user", JSON.stringify(user));
+
+    console.log("User logged in successfully:", user);
+
+    
+    const callbackUrl = searchParams.get("callbackUrl") || "/";
+    console.log("Redirecting to:", callbackUrl); 
+    
     setTimeout(() => {
-      router.replace(searchParams.get("callbackUrl") ?? "/");
-      router.refresh();
+      router.push(callbackUrl); // Use router.push for redirection
     }, 1000);
   }
+  
+  
+  
 
   return (
     <div className={cn("grid gap-6", className)} {...props}>
