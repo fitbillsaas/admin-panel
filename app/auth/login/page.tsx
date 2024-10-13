@@ -1,8 +1,8 @@
 import { Metadata } from "next";
-import Image from "next/image";
+// import Image from "next/image";
 import Link from "next/link"; // Import Link for navigation
 import { Suspense } from "react";
-import Logo from "../../../public/images/logos/opus-logo.png";
+// import Logo from "../../../public/images/logos/opus-logo.png";
 import { LoginForm } from "../login/LoginForm";
 
 export const metadata: Metadata = {
@@ -17,7 +17,7 @@ export default async function LoginPage() {
       <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
         <div className="flex flex-col gap-2 text-center">
           <div className="block lg:hidden m-auto">
-            <Image width={112} height={112} src={Logo} alt="Logo" priority />
+            {/* <Image width={112} height={112} src={Logo} alt="Logo" priority /> */}
           </div>
           <h1 className="text-2xl font-semibold tracking-tight xs:hidden">
             Login

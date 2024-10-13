@@ -1,5 +1,5 @@
 import Image from "next/image";
-import banner from "../../public/images/logos/banner.png";
+import banner from "../../public/images/logos/banner.jpg";
 export default function AuthLayout({
   children,
 }: {
