@@ -175,12 +175,14 @@ const Login = async (
   requestInit?: RequestInit,
 ): Promise<ApiResponse> => {
   try {
-    const response = await fetch(generateQueryUrl("auth/local", queryParams), {
+    const response = await fetch(generateQueryUrl("users/login", queryParams), {
       method: "POST",
       body: JSON.stringify(body),
       headers: await getHttpOption({ auth: false }),
       ...requestInit,
     });
+
+    console.log("datat",response);
     return responseHandler(response, true);
   } catch (error) {
     return errorHandler(error);
