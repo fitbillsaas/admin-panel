@@ -22,7 +22,7 @@ import {
   EyeOpenIcon,
 } from "@radix-ui/react-icons";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { HTMLAttributes, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -42,8 +42,8 @@ const formSchema = z.object({
 });
 
 export function LoginForm({ className, ...props }: LoginFormProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  // const router = useRouter();
+  // const searchParams = useSearchParams();
   const [loginError, setLoginError] = useState<LoginError | undefined>(
     undefined,
   );
@@ -63,16 +63,15 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
 
   const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoginError(undefined);
     setLoginSuccess(false);
-  
+
     console.log(values, "Submitted values");
-  
+
     const email = values.username;
     const password = values.password;
-  
+
     // Make API call to log in
     const response = await fetch(`${API_ENDPOINT}/users/login`, {
       method: "POST",
@@ -81,16 +80,18 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
       },
       body: JSON.stringify({ email, password }),
     });
-  
+
     const responseData = await response.json();
 
-    console.log("Response Data",responseData);
-  
+    console.log("Response Data", responseData);
+
     if (!response.ok) {
-      setLoginError({ message: responseData.message || "Invalid Credentials!" });
+      setLoginError({
+        message: responseData.message || "Invalid Credentials!",
+      });
       return;
     }
-  
+
     const { user, access } = responseData.data;
 
     setLoginSuccess(true);
@@ -101,17 +102,17 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
 
     console.log("User logged in successfully:", user);
 
-    
-    const callbackUrl = searchParams.get("callbackUrl") || "/";
-    console.log("Redirecting to:", callbackUrl); 
-    
-    setTimeout(() => {
-      router.push(callbackUrl); // Use router.push for redirection
-    }, 1000);
+    // router.replace("/");
+    window.location.replace("/");
+
+    //   const callbackUrl = searchParams.get("/") || "/";
+    //   console.log("Redirecting to:", callbackUrl);
+
+    //   setTimeout(() => {
+    //     router.push(callbackUrl); // Use router.push for redirection
+    //   }, 1000);
+    // }
   }
-  
-  
-  
 
   return (
     <div className={cn("grid gap-6", className)} {...props}>

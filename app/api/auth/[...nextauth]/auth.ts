@@ -1,18 +1,11 @@
-import { API } from "@/lib/fetch";
+// import { API } from "@/lib/fetch";
 import { NextAuthOptions } from "next-auth";
-import { JWT } from "next-auth/jwt";
+// import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export const getSessionProps = (user: any) => {
   return {
-    id: user.id,
-    avatar: user.avatar,
-    role: user.role,
-    name: user.name,
-    email: user.email,
-    accessToken: user.accessToken,
-    refreshToken: user.refreshToken,
-    tokenExpiry: user.tokenExpiry,
+    id: user,
   };
 };
 
@@ -20,36 +13,36 @@ export const getSessionProps = (user: any) => {
  *
  * @param {JWT} token
  */
-const refreshAccessToken = async (token: JWT) => {
-  try {
-    const { data, error } = await API.Post(
-      "auth/token",
-      {
-        token: token.user.accessToken,
-        refresh_token: token.user.refreshToken,
-      },
-      undefined,
-      { auth: false },
-    );
-    if (error || !data) {
-      throw new Error("Something went wrong!");
-    }
-    return {
-      ...token,
-      user: {
-        ...getSessionProps(token.user),
-        accessToken: data.token,
-        refreshToken: data.refresh_token,
-        tokenExpiry: data.token_expiry,
-      },
-    };
-  } catch (e) {
-    return {
-      ...token,
-      error: "RefreshAccessTokenError",
-    };
-  }
-};
+// const refreshAccessToken = async (token: JWT) => {
+//   try {
+//     const { data, error } = await API.Post(
+//       "auth/token",
+//       {
+//         token: token.user.accessToken,
+//         refresh_token: token.user.refreshToken,
+//       },
+//       undefined,
+//       { auth: false },
+//     );
+//     if (error || !data) {
+//       throw new Error("Something went wrong!");
+//     }
+//     return {
+//       ...token,
+//       user: {
+//         ...getSessionProps(token.user),
+//         accessToken: data.token,
+//         refreshToken: data.refresh_token,
+//         tokenExpiry: data.token_expiry,
+//       },
+//     };
+//   } catch (e) {
+//     return {
+//       ...token,
+//       error: "RefreshAccessTokenError",
+//     };
+//   }
+// };
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -63,20 +56,22 @@ export const authOptions: NextAuthOptions = {
         },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
-        const { data, error, message } = await API.Login({
-          ...credentials,
-          info: {},
-        });
-        if (!!error) {
-          throw new Error(message || error);
-        }
+      async authorize() {
+        // console.log(...credentials);
+
+        // const { data, error, message } = await API.Login({
+        //   ...credentials,
+        //   info: {},
+        // });
+        // if (!!error) {
+        //   throw new Error(message || error);
+        // }
 
         return {
-          ...getSessionProps(data.user),
-          accessToken: data.token,
-          refreshToken: data.refresh_token,
-          tokenExpiry: data.token_expiry,
+          ...getSessionProps("S"),
+          accessToken: "data.token",
+          refreshToken: "data.refresh_token",
+          tokenExpiry: "sajer",
         };
       },
     }),
@@ -95,7 +90,7 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async session({ session, token }) {
       if (token) {
-        session.user = getSessionProps(token.user);
+        // session.user = getSessionProps("s");
         session.error = token.error;
       }
       return session;
@@ -125,15 +120,14 @@ export const authOptions: NextAuthOptions = {
           ...token,
           user: getSessionProps(user),
         };
-      }
+      } // check the token validity
 
-      // check the token validity
       if (new Date() < new Date(token.user.tokenExpiry)) {
         return token;
       }
 
-      // get new token using refresh token
-      return refreshAccessToken(token);
+      return token; // get new token using refresh token
+      // return refreshAccessToken(token);
     },
   },
   debug: process.env.NEXT_AUTH_DEBUG === "Y",

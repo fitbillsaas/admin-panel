@@ -1,34 +1,45 @@
+"use client";
 import { FullLoader } from "@/components/full-loader";
 import { Loader } from "@/components/loader";
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import "@/styles/globals.css";
 import "@/styles/prime-react.css";
-import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { NextAuthProvider } from "./providers/auth";
 import { ThemeProvider } from "./providers/theme";
+import { TopNav } from "@/components/menu/top-nav";
+
 export const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
 });
 
-export const metadata: Metadata = {
-  title: "OPUS",
-  description: "OPUS Admin Panel",
-  manifest: "/manifest.json",
-  icons: [
-    { rel: "apple-touch-icon", url: "icons/apple-touch-icon.png" },
-    { rel: "icon", url: "icons/apple-touch-icon.png" },
-  ],
-};
+// export const metadata: Metadata = {
+//   title: "OPUS",
+//   description: "OPUS Admin Panel",
+//   manifest: "/manifest.json",
+//   icons: [
+//     { rel: "apple-touch-icon", url: "icons/apple-touch-icon.png" },
+//     { rel: "icon", url: "icons/apple-touch-icon.png" },
+//   ],
+// };
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [isLoginPage, setIsLoginPage] = useState(false);
+
+  useEffect(() => {
+    // This will only run on the client side
+    if (typeof window !== "undefined") {
+      setIsLoginPage(window.location.pathname === "/auth/login");
+    }
+  }, []);
+
   return (
     <html lang="en">
       <head>
@@ -78,6 +89,9 @@ export default function RootLayout({
         </Suspense>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <Toaster />
+          {/* Only show TopNav if not on /auth/login */}
+          {!isLoginPage && <TopNav />}
+
           <NextAuthProvider>{children}</NextAuthProvider>
         </ThemeProvider>
       </body>
