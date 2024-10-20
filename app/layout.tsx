@@ -6,10 +6,10 @@ import { cn } from "@/lib/utils";
 import "@/styles/globals.css";
 import "@/styles/prime-react.css";
 import { Inter as FontSans } from "next/font/google";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect } from "react";
 import { NextAuthProvider } from "./providers/auth";
 import { ThemeProvider } from "./providers/theme";
-import { TopNav } from "@/components/menu/top-nav";
+// import { TopNav } from "@/components/menu/top-nav";
 
 export const fontSans = FontSans({
   subsets: ["latin"],
@@ -31,12 +31,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [isLoginPage, setIsLoginPage] = useState(false);
+  // const [isLoginPage, setIsLoginPage] = useState(false);
 
   useEffect(() => {
     // This will only run on the client side
     if (typeof window !== "undefined") {
-      setIsLoginPage(window.location.pathname === "/auth/login");
+      // setIsLoginPage(window.location.pathname === "/auth/login");
     }
   }, []);
 
@@ -90,7 +90,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <Toaster />
           {/* Only show TopNav if not on /auth/login */}
-          {!isLoginPage && <TopNav />}
+          {/* {!isLoginPage && <TopNav />} */}
 
           <NextAuthProvider>{children}</NextAuthProvider>
         </ThemeProvider>
